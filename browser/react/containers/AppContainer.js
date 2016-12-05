@@ -25,6 +25,7 @@ export default class AppContainer extends Component {
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
     this.creatingNewPlaylist = this.creatingNewPlaylist.bind(this);
+    this.getPlaylist = this.getPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -47,17 +48,27 @@ export default class AppContainer extends Component {
  creatingNewPlaylist(newName){
     axios.post('/api/playlists', {
       name: newName
-     })
-    .then(() => {
-      console.log("before get req");
-      axios.get('/api/playlists')
     })
     .then(res => res.data)
-    .then(playlists => this.setState({playlists: playlists}))
+    .then(playlist => {
+        this.setState({
+          playlists: [...this.state.playlists, playlist]
+        })
+    })
+    .catch(console.err);
+  }
+
+  getPlaylist(playlistId){
+    axios.get(`/api/playlists/${playlistId}`)
+    .then(res => res.data)
+    .then(playlist => {
+      playlist.songs = playlist.songs.map(convertSong);
+      this.setState({selectedPlaylist: playlist})
+    })
+    .catch(console.err);
   }
 
   onLoad (albums, artists, playlists) {
-    console.log('inside onLoad, playlists: ', playlists);
     this.setState({
       albums: convertAlbums(albums),
       artists: artists,
@@ -148,7 +159,8 @@ export default class AppContainer extends Component {
       toggle: this.toggle,
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
-      creatingNewPlaylist: this.creatingNewPlaylist
+      creatingNewPlaylist: this.creatingNewPlaylist,
+      getPlaylist: this.getPlaylist
     });
 
     return (

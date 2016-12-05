@@ -25,7 +25,7 @@ export default class PlaylistContainer extends Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.creatingNewPlaylist(this.state.currInput);
-    this.setState({currInput: ''});
+    this.setState({currInput: '', userTyped: false});
   }
 
   invalidInput(){
