@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
 import AppContainer from './containers/AppContainer';
 import Albums from './components/Albums';
 import Album from './components/Album';
@@ -12,7 +12,7 @@ import Playlists from './containers/PlaylistContainer';
 import Playlist from './components/playlist';
 
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path='/' component={AppContainer} foo={'foo'}>
       <Route path="/albums" component={Albums} />
       <Route path="/albums/:albumId" component={Album} />

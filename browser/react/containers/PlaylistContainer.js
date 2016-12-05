@@ -25,7 +25,10 @@ export default class PlaylistContainer extends Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.creatingNewPlaylist(this.state.currInput);
-    this.setState({currInput: '', userTyped: false});
+    this.setState({
+      currInput: '',
+      userTyped: false
+    });
   }
 
   invalidInput(){
@@ -40,7 +43,7 @@ export default class PlaylistContainer extends Component {
     // return this.state.warningMsg
   }
 
- 
+
 
   render(){
     return (

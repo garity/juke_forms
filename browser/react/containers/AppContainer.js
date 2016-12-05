@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
+
 import axios from 'axios';
 
 import initialState from '../initialState';
@@ -26,6 +28,7 @@ export default class AppContainer extends Component {
     this.selectArtist = this.selectArtist.bind(this);
     this.creatingNewPlaylist = this.creatingNewPlaylist.bind(this);
     this.getPlaylist = this.getPlaylist.bind(this);
+    this.addingSongToPlaylist = this.addingSongToPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -34,7 +37,8 @@ export default class AppContainer extends Component {
       .all([
         axios.get('/api/albums/'),
         axios.get('/api/artists/'),
-        axios.get('/api/playlists')
+        axios.get('/api/playlists'),
+        axios.get('/api/songs')
       ])
       .then(res => res.map(r => r.data))
       .then(data => this.onLoad(...data));
@@ -54,9 +58,28 @@ export default class AppContainer extends Component {
         this.setState({
           playlists: [...this.state.playlists, playlist]
         })
+        const path = `/playlists/${playlist.id}`
+        browserHistory.push(path);
+
     })
     .catch(console.err);
   }
+
+  addingSongToPlaylist(songId){
+    axios.post(`/api/playlists/${this.state.selectedPlaylist.id}/songs`,{
+      id: songId
+    })
+    .then(res => res.data)
+    .then(song => {
+      let playlist = this.state.selectedPlaylist
+      playlist.songs = playlist.songs.push(song)
+
+      this.setState({
+        selectedPlaylist: playlist
+      })
+    })
+  }
+
 
   getPlaylist(playlistId){
     axios.get(`/api/playlists/${playlistId}`)
@@ -68,11 +91,12 @@ export default class AppContainer extends Component {
     .catch(console.err);
   }
 
-  onLoad (albums, artists, playlists) {
+  onLoad (albums, artists, playlists, songs) {
     this.setState({
       albums: convertAlbums(albums),
       artists: artists,
-      playlists: playlists
+      playlists: playlists,
+      allSongs: songs
     });
   }
 
@@ -160,7 +184,8 @@ export default class AppContainer extends Component {
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
       creatingNewPlaylist: this.creatingNewPlaylist,
-      getPlaylist: this.getPlaylist
+      getPlaylist: this.getPlaylist,
+      addingSongToPlaylist: this.addingSongToPlaylist,
     });
 
     return (
