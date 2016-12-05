@@ -8,6 +8,7 @@ import Albums from '../components/Albums.js';
 import Album from '../components/Album';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
+import Filter from './FilterableArtistsContainer';
 
 import { convertAlbum, convertAlbums, convertSong, skip } from '../utils';
 
