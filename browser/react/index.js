@@ -8,7 +8,7 @@ import Artists from './components/Artists';
 import Artist from './components/Artist';
 import Songs from './components/Songs';
 import Filter from './containers/FilterableArtistsContainer';
-import Playlists from './components/NewPlaylist';
+import Playlists from './containers/PlaylistContainer';
 
 ReactDOM.render(
   <Router history={hashHistory}>
