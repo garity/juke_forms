@@ -24,9 +24,7 @@ export default class PlaylistContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
-    this.creatingNewPlaylist(this.state.currInput);
-
+    this.props.creatingNewPlaylist(this.state.currInput);
     this.setState({currInput: ''});
   }
 
@@ -42,17 +40,7 @@ export default class PlaylistContainer extends Component {
     // return this.state.warningMsg
   }
 
-  creatingNewPlaylist(newName){
-    console.log('posting new playlist to db with name '+newName);
-
-    axios.post('/api/playlists', {
-      name: newName
-     })
-    .then(res => res.data)
-    .then(result => {
-      console.log(result) // response json from the server!
-    });
-  }
+ 
 
   render(){
     return (

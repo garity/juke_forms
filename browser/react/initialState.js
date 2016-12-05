@@ -7,7 +7,7 @@ const initialState = {
   currentSongList: [],
   isPlaying: false,
   progress: 0,
-  // playlist:
+  playlists: []
 };
 
 export default initialState;

@@ -24,6 +24,7 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
+    this.creatingNewPlaylist = this.creatingNewPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -31,7 +32,8 @@ export default class AppContainer extends Component {
     Promise
       .all([
         axios.get('/api/albums/'),
-        axios.get('/api/artists/')
+        axios.get('/api/artists/'),
+        axios.get('/api/playlists')
       ])
       .then(res => res.map(r => r.data))
       .then(data => this.onLoad(...data));
@@ -42,10 +44,24 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
-  onLoad (albums, artists) {
+ creatingNewPlaylist(newName){
+    axios.post('/api/playlists', {
+      name: newName
+     })
+    .then(() => {
+      console.log("before get req");
+      axios.get('/api/playlists')
+    })
+    .then(res => res.data)
+    .then(playlists => this.setState({playlists: playlists}))
+  }
+
+  onLoad (albums, artists, playlists) {
+    console.log('inside onLoad, playlists: ', playlists);
     this.setState({
       albums: convertAlbums(albums),
-      artists: artists
+      artists: artists,
+      playlists: playlists
     });
   }
 
@@ -131,13 +147,14 @@ export default class AppContainer extends Component {
       toggleOne: this.toggleOne,
       toggle: this.toggle,
       selectAlbum: this.selectAlbum,
-      selectArtist: this.selectArtist
+      selectArtist: this.selectArtist,
+      creatingNewPlaylist: this.creatingNewPlaylist
     });
 
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
-          <Sidebar />
+          <Sidebar playlists={this.state.playlists} />
         </div>
         <div className="col-xs-10">
         {
